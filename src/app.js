@@ -21,20 +21,20 @@ const API =
   "https://pexelsdimasv1.p.rapidapi.com/v1/search?query=ocean&locale=en-US&per_page=15&page=1";
 
 const getDataImages = async () => {
-  const getData = await fetch(API, options);
-  const transformData = await getData.json();
+  try {
+    const getData = await fetch(API, options);
+    const transformData = await getData.json();
 
-  console.log(transformData.photos);
-  transformData.photos.forEach((dataImage) => {
-    console.log(dataImage.src.original);
+    console.log(transformData.photos);
+    transformData.photos.forEach((dataImage) => {
+      console.log(dataImage.src.original);
 
-    const card = document.createElement("div");
-    card.innerHTML = `
+      const card = document.createElement("div");
+      card.innerHTML = `
     <div class="card">
     <div class="imgbox">
         <div class="img">
           <img src="${dataImage.src.original}" alt="" class="image-api">
-          
         </div>
     </div>
     <div class="details">
@@ -43,9 +43,12 @@ const getDataImages = async () => {
     </div>
 </div>
 <br>
-    `
-    containerCards.appendChild(card);
-  });
+    `;
+      containerCards.appendChild(card);
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 async function get() {
