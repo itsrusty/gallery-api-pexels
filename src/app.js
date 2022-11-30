@@ -1,3 +1,4 @@
+// headers
 document.addEventListener("DOMContentLoaded", () => {
   console.log("loaded!");
   getDataImages();
@@ -14,7 +15,9 @@ const options = {
 
 // DOM elements
 const containerCards = document.querySelector(".container-cards");
-const searchButton = document.querySelector(".search-image");
+const animationLoading = document.querySelector(".spinner");
+const searchInput = document.querySelector("#search");
+const searchButton = document.querySelector(".searchButton");
 
 // API
 const API =
@@ -24,22 +27,25 @@ const getDataImages = async () => {
   try {
     const getData = await fetch(API, options);
     const transformData = await getData.json();
+    transformData
+      ? (animationLoading.style = "display:none")
+      : (animationLoading.style = "display:block");
 
     console.log(transformData.photos);
     transformData.photos.forEach((dataImage) => {
-      console.log(dataImage.src.original);
-
+      console.log(dataImage);
       const card = document.createElement("div");
       card.innerHTML = `
     <div class="card">
     <div class="imgbox">
         <div class="img">
-          <img src="${dataImage.src.original}" alt="" class="image-api">
+          <img src="${dataImage.src.original}" alt="" class="image-api" loading="lazy">          
         </div>
     </div>
     <div class="details">
-        <h2 class="title">John Doe</h2>
-        <span class="caption">Developer</span>
+        <p class="title">Creador: ${dataImage.photographer}</p>
+        <button class="buttonDownloadImage"><a href="${dataImage.src.original}"download>Descargar</a></button>
+        <span class="caption">${dataImage.alt}</span>
     </div>
 </div>
 <br>
@@ -51,6 +57,13 @@ const getDataImages = async () => {
   }
 };
 
+// search image function
+searchButton.addEventListener("click", (e) => {
+  e.preventDefault();
+  console.log(searchInput.value);
+});
+
+//
 async function get() {
   const t = await fetch("../api_example.json");
   const d = await t.json();
